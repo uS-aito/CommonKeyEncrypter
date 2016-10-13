@@ -20,7 +20,10 @@ namespace CommonKeyEncrypter
 				aes.Padding = PaddingMode.PKCS7;
 				try
 				{
-					Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes(password, Encoding.UTF8.GetBytes(salt), 1000);
+					byte[] bSalt = Encoding.UTF8.GetBytes(salt);
+					SHA256 crypto = new SHA256CryptoServiceProvider();
+					byte[] bHashedSalt = crypto.ComputeHash(bSalt);
+					Rfc2898DeriveBytes deriveBytes = new Rfc2898DeriveBytes(password, bHashedSalt, 1000);
 					aes.Key = deriveBytes.GetBytes(16);
 					aes.IV = deriveBytes.GetBytes(16);
 				}
